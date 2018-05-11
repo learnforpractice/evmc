@@ -685,6 +685,21 @@ typedef struct evmc_result (*evmc_execute_fn)(struct evmc_instance* instance,
                                               size_t code_size);
 
 
+struct evmc_tracer_context;
+
+typedef void (*evmc_trace_callback)(struct evmc_tracer_context* context,
+                                    int depth,
+                                    int step,
+                                    size_t code_offset,
+                                    enum evmc_status_code status_code,
+                                    int64_t gas_left,
+                                    const struct evmc_uint256be* top_stack_item,
+                                    size_t memory_size,
+                                    const uint8_t* memory);
+
+typedef void (*evmc_set_tracer)(struct evmc_instance* instance, evmc_trace_callback callback);
+
+
 /**
  * The EVM instance.
  *
@@ -719,6 +734,8 @@ struct evmc_instance
 
     /** Pointer to function executing a code by the EVM instance. */
     evmc_execute_fn execute;
+
+    evmc_set_tracer set_tracer;
 
     /**
      * Optional pointer to function modifying VM's options.
