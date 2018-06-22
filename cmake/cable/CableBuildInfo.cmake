@@ -77,5 +77,12 @@ function(cable_add_buildinfo_library)
     # Make is static and do not build by default until some other target will actually use it.
     add_library(${NAME} STATIC EXCLUDE_FROM_ALL ${binary_dir}/${NAME}.c ${binary_dir}/${NAME}.h)
 
+    if( APPLE )
+        # Apple Specific Options Here
+    else( APPLE )
+        # Linux Specific Options Here
+        target_compile_options(${NAME} PRIVATE -fPIC)
+    endif( APPLE )
+
     target_include_directories(${NAME} PUBLIC ${binary_dir})
 endfunction()
