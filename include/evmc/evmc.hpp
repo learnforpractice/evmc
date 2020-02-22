@@ -342,49 +342,49 @@ public:
     virtual ~HostInterface() noexcept = default;
 
     /// @copydoc evmc_host_interface::account_exists
-    virtual bool account_exists(const address& addr) const noexcept = 0;
+    virtual bool account_exists(const address& addr) const = 0;
 
     /// @copydoc evmc_host_interface::get_storage
-    virtual bytes32 get_storage(const address& addr, const bytes32& key) const noexcept = 0;
+    virtual bytes32 get_storage(const address& addr, const bytes32& key) const = 0;
 
     /// @copydoc evmc_host_interface::set_storage
     virtual evmc_storage_status set_storage(const address& addr,
                                             const bytes32& key,
-                                            const bytes32& value) noexcept = 0;
+                                            const bytes32& value) = 0;
 
     /// @copydoc evmc_host_interface::get_balance
-    virtual uint256be get_balance(const address& addr) const noexcept = 0;
+    virtual uint256be get_balance(const address& addr) const = 0;
 
     /// @copydoc evmc_host_interface::get_code_size
-    virtual size_t get_code_size(const address& addr) const noexcept = 0;
+    virtual size_t get_code_size(const address& addr) const = 0;
 
     /// @copydoc evmc_host_interface::get_code_hash
-    virtual bytes32 get_code_hash(const address& addr) const noexcept = 0;
+    virtual bytes32 get_code_hash(const address& addr) const = 0;
 
     /// @copydoc evmc_host_interface::copy_code
     virtual size_t copy_code(const address& addr,
                              size_t code_offset,
                              uint8_t* buffer_data,
-                             size_t buffer_size) const noexcept = 0;
+                             size_t buffer_size) const = 0;
 
     /// @copydoc evmc_host_interface::selfdestruct
-    virtual void selfdestruct(const address& addr, const address& beneficiary) noexcept = 0;
+    virtual void selfdestruct(const address& addr, const address& beneficiary) = 0;
 
     /// @copydoc evmc_host_interface::call
-    virtual result call(const evmc_message& msg) noexcept = 0;
+    virtual result call(const evmc_message& msg) = 0;
 
     /// @copydoc evmc_host_interface::get_tx_context
-    virtual evmc_tx_context get_tx_context() const noexcept = 0;
+    virtual evmc_tx_context get_tx_context() const = 0;
 
     /// @copydoc evmc_host_interface::get_block_hash
-    virtual bytes32 get_block_hash(int64_t block_number) const noexcept = 0;
+    virtual bytes32 get_block_hash(int64_t block_number) const = 0;
 
     /// @copydoc evmc_host_interface::emit_log
     virtual void emit_log(const address& addr,
                           const uint8_t* data,
                           size_t data_size,
                           const bytes32 topics[],
-                          size_t num_topics) noexcept = 0;
+                          size_t num_topics) = 0;
 };
 
 
@@ -420,7 +420,7 @@ public:
 
     evmc_storage_status set_storage(const address& address,
                                     const bytes32& key,
-                                    const bytes32& value) noexcept final
+                                    const bytes32& value) final
     {
         return host->set_storage(context, &address, &key, &value);
     }
@@ -594,7 +594,7 @@ public:
                    evmc_revision rev,
                    const evmc_message& msg,
                    const uint8_t* code,
-                   size_t code_size) noexcept
+                   size_t code_size)
     {
         return result{m_instance->execute(m_instance, &host, ctx, rev, &msg, code, code_size)};
     }
@@ -604,7 +604,7 @@ public:
                    evmc_revision rev,
                    const evmc_message& msg,
                    const uint8_t* code,
-                   size_t code_size) noexcept
+                   size_t code_size)
     {
         return execute(Host::get_interface(), host.to_context(), rev, msg, code, code_size);
     }
@@ -620,7 +620,7 @@ public:
     result execute(evmc_revision rev,
                    const evmc_message& msg,
                    const uint8_t* code,
-                   size_t code_size) noexcept
+                   size_t code_size)
     {
         return result{
             m_instance->execute(m_instance, nullptr, nullptr, rev, &msg, code, code_size)};
@@ -657,7 +657,7 @@ inline evmc_bytes32 get_storage(evmc_host_context* h,
 inline evmc_storage_status set_storage(evmc_host_context* h,
                                        const evmc_address* addr,
                                        const evmc_bytes32* key,
-                                       const evmc_bytes32* value) noexcept
+                                       const evmc_bytes32* value)
 {
     return Host::from_context(h)->set_storage(*addr, *key, *value);
 }
